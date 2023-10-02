@@ -8,12 +8,12 @@ export type Todo = {
 }
 
 export function newTodo(t: string): Todo {
-	return {
-    	text: t,
-    	done: false,
-    	skip: false,
-    	id: crypto.randomUUID(),
-	} as Todo;
+    return {
+        text: t,
+        done: false,
+        skip: false,
+        id: crypto.randomUUID(),
+    } as Todo;
 }
 
 export function genereateNode(todo: Todo) {
@@ -93,36 +93,34 @@ export function loadTodoOrEmpty(): Array<Todo> {
     return [];
 }
 
+function getIndexByID(todos: Array<Todo>, id: ID): number {
+    return todos.findIndex((e) => {
+        return e.id === id;
+    })
+}
+
 export function saveTodo(todos: Array<Todo>) {
     let todoJSON = JSON.stringify(todos);
     localStorage.setItem('todos', todoJSON);
 }
 
 export function skipTodoByID(todos: Array<Todo>, id: ID) {
-    const i = todos.findIndex((e) => {
-        return e.id === id;
-    })
+    const i = getIndexByID(todos, id);
     if (i >= 0) todos[i].skip = !todos[i].skip;
 }
 
 export function toggleTodoByID(todos: Array<Todo>, id: ID) {
-    const i = todos.findIndex((e) => {
-        return e.id === id;
-    })
+    const i = getIndexByID(todos, id);
     if (i >= 0) todos[i].done = !todos[i].done;
 }
 
 export function removeTodoByID(todos: Array<Todo>, id: ID) {
-    const i = todos.findIndex((e) => {
-        return e.id === id;
-    })
+    const i = getIndexByID(todos, id);
     if (i >= 0) todos.splice(i, 1);
 }
 
 export function pushBackTodo(todos: Array<Todo>, id: ID) {
-    const i = todos.findIndex((e) => {
-        return e.id === id;
-    })
+    const i = getIndexByID(todos, id);
 
     if (i >= 0) {
         todos.push(...todos.splice(i, 1));
