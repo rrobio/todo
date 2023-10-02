@@ -24,4 +24,9 @@ describe('template spec', () => {
     cy.contains('delete').should('be.visible').click()
 	cy.get('.todo').should('have.length', 0)
   })
+  it('mark todo as done', () => {
+    cy.visit('http://localhost:5173/')
+    cy.contains('done').should('be.visible').click()
+    cy.get('[id*=done-button]').should('be.enabled')
+  })
 })
