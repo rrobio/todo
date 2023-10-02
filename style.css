@@ -14,19 +14,8 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -36,37 +25,9 @@ h1 {
   line-height: 1.1;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  border: 1px solid #323abb;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -81,6 +42,54 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+#create-todo {
+	text-align: center;
+}
+
+#create-todo button,
+#create-todo input
+{
+    border-radius: 8px;
+	height: 30px;
+}
+#app {
+  display: flex;
+  flex-flow: row wrap;
+  place-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.todo {
+    border-radius: 8px;
+	margin: 10px;
+	padding: 10px;
+	text-align: left;
+	border: 1px solid black;
+	min-width: 230px;
+	max-width: 230px;
+	min-height: 230px;
+}
+
+input[id*="done-button"]:checked ~ p {
+  text-decoration: line-through;
+}
+
+input[id*="skip-button"]:checked ~ p {
+	color: green;
+}
+.todo p {
+	text-align: left:
+}
+.todo button {
+	border: 1px solid black;
+	padding: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {
