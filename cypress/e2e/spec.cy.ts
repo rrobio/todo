@@ -4,6 +4,7 @@ describe('template spec', () => {
     cy.contains('Create Todo').should('be.visible')
     cy.get('#new-todo-text').should('be.visible')
 	cy.get('.todo').should('have.length', 1)
+	cy.get('input[type=checkbox]').should('not.be.checked')
   })
   it('should add new todo', () => {
     cy.visit('http://localhost:5173/')
