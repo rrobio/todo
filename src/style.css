@@ -2,16 +2,14 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgb(255 255 255 / 87%);
   background-color: #242424;
-
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -35,15 +33,25 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
 #create-todo {
 	text-align: center;
+}
+
+.todo button {
+	border: 1px solid black;
+	padding: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
 }
 
 #create-todo button,
@@ -52,6 +60,7 @@ button:focus-visible {
     border-radius: 8px;
 	height: 30px;
 }
+
 #app {
   display: flex;
   flex-flow: row wrap;
@@ -73,6 +82,10 @@ button:focus-visible {
 	min-height: 230px;
 }
 
+.todo p {
+	text-align: left;
+}
+
 input[id*="done-button"]:checked ~ p {
   text-decoration: line-through;
 }
@@ -80,25 +93,17 @@ input[id*="done-button"]:checked ~ p {
 input[id*="skip-button"]:checked ~ p {
 	color: green;
 }
-.todo p {
-	text-align: left:
-}
-.todo button {
-	border: 1px solid black;
-	padding: 5px;
-	padding-right: 10px;
-	padding-left: 10px;
-}
-
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #fff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }

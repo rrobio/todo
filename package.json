@@ -6,10 +6,19 @@
   "scripts": {
     "dev": "vite src",
     "build": "tsc && vite build src",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "yarn run eslint src/*.ts && yarn run stylelint '**/*.css'"
   },
   "devDependencies": {
-    "typescript": "^5.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^39.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "stylelint": "^15.10.3",
+    "stylelint-config-standard": "^34.0.0",
+    "typescript": "*",
     "vite": "^4.4.5"
   }
 }
