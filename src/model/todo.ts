@@ -92,7 +92,10 @@ export class Todo implements TodoData {
 
     public generateNode(): HTMLDivElement {
         const todoNode = document.createElement('div')
-        todoNode.setAttribute('class', 'todo')
+        let nodeClass = 'todo'
+        if (this.done) nodeClass += ' todo-done';
+        if (this.skip) nodeClass += ' todo-skip';
+        todoNode.setAttribute('class', nodeClass)
 
         const toggleButton = this.generateCheck("done");
         const skipButton = this.generateCheck("skip");

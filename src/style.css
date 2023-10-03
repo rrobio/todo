@@ -86,11 +86,11 @@ button:focus-visible {
 	text-align: left;
 }
 
-input[id*="done-button"]:checked ~ p {
+.todo-done>p {
   text-decoration: line-through;
 }
 
-input[id*="skip-button"]:checked ~ p {
+.todo-skip>p {
 	color: green;
 }
 
