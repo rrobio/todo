@@ -1,6 +1,7 @@
 import './style.css'
 import * as td from './helpers.js'
 import { Todo } from './model/todo.ts'
+import generateNode from './model/todoElement.ts'
 
 const todos = td.loadTodoOrNull() ?? [new Todo('Example')]
 
@@ -24,7 +25,7 @@ function renderTodos (todos: Todo[]): void {
       }
     })
     .forEach(e => {
-      const todoHTMLElement = e.generateNode()
+      const todoHTMLElement = generateNode(e)
       app.appendChild(todoHTMLElement)
     })
 }

@@ -60,7 +60,7 @@ describe('export todo', () => {
   })
   test('export to json (modified)', () => {
     const todo = new Todo('test', 12345)
-    todo.toggleDone();
+    todo.toggleDone()
     expect(JSON.stringify(todo.export())).toBe('{"text":"test","done":true,"skip":false,"id":12345}')
   })
 })
