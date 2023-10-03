@@ -27,9 +27,9 @@ function renderTodos (todos: Todo[]): void {
           return true
       }
     })
-    .forEach((e) => {
-      const t = td.genereateNode(e)
-      app.appendChild(t)
+    .forEach(e => {
+      const todoHTMLElement = e.generateNode()
+      app.appendChild(todoHTMLElement)
     })
 }
 
@@ -65,7 +65,7 @@ document.addEventListener('toggleTodo', (e) => {
   td.saveTodo(todos)
 })
 
-document.addEventListener('skipTodo', (e) => {
+document.addEventListener('toggleSkip', (e) => {
   const target = e.target as HTMLInputElement
   td.skipTodoByID(todos, +target.value)
   td.pushBackTodo(todos, +target.value)
