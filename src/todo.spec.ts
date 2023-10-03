@@ -48,3 +48,36 @@ describe('recreate todo', () => {
     expect(todo2.id).toBe(todo1.id)
   })
 })
+describe('export todo', () => {
+  test('should export todo into a tododata object', () => {
+    const todo = new Todo('test', 12345)
+    expect(todo.export().text).toBe('test')
+    expect(todo.export().id).toBe(12345)
+  })
+  test('export to json', () => {
+    const todo = new Todo('test', 12345)
+    expect(JSON.stringify(todo.export())).toBe('{"text":"test","done":false,"skip":false,"id":12345}')
+  })
+})
+describe('import todo', () => {
+  test('should import todo from tododata', () => {
+    const todo = Todo.import({ text: 'test', id: 12345, done: false, skip: false })
+    expect(todo.text).toBe('test')
+    expect(todo.id).toBe(12345)
+  })
+  test('import from json', () => {
+    const todo = Todo.import(JSON.parse('{"text":"test1","done":false,"skip":false,"id":12345}'))
+    expect(todo.text).toBe('test1')
+    expect(todo.id).toBe(12345)
+    expect(todo).toBeInstanceOf(Todo)
+  })
+  test('should be equal when importing from export', () => {
+    const todo1 = new Todo('test', 12345)
+    const todo2 = Todo.import(JSON.parse(JSON.stringify(todo1.export())))
+    expect(todo2).toBeInstanceOf(Todo)
+    expect(todo2.text).toBe(todo1.text)
+    expect(todo2.done).toBe(todo1.done)
+    expect(todo2.skip).toBe(todo1.skip)
+    expect(todo2.id).toBe(todo1.id)
+  })
+})
