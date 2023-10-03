@@ -2,11 +2,7 @@ import './style.css'
 import * as td from './todo.js'
 import { Todo } from './model/todo.ts'
 
-const todos = td.loadTodoOrEmpty()
-
-if (todos.length === 0) {
-  todos.push(new Todo('test1'))
-}
+const todos = td.loadTodoOrNull() ?? [new Todo('Example')]
 
 function getFilter (): string {
   return (document.getElementById('filter-select') as HTMLSelectElement).value

@@ -1,11 +1,11 @@
 import { Todo, type ID, type TodoData } from './model/todo.ts'
 
-export function loadTodoOrEmpty (): Todo[] {
+export function loadTodoOrNull (): Todo[] | null {
   const todojson = localStorage.getItem('todos')
   if (typeof todojson === 'string') {
     return JSON.parse(todojson).map((e: TodoData) => Todo.import(e))
   }
-  return []
+  return null
 }
 
 export function saveTodo (todos: Todo[]): void {
