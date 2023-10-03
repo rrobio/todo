@@ -7,7 +7,7 @@
     "dev": "vite src --host",
     "build": "tsc && vite build src",
     "preview": "vite preview",
-    "lint": "yarn run eslint src/*.ts && yarn run stylelint '**/*.css'",
+    "lint": "yarn run eslint src/**/*.ts && yarn run stylelint '**/*.css'",
     "ete": "cypress open",
     "test": "jest"
   },
