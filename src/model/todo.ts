@@ -42,5 +42,4 @@ export class Todo implements TodoData {
   public toggleSkip (): void {
     this.skip = !this.skip
   }
-
 }
