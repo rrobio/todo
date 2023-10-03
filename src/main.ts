@@ -1,5 +1,5 @@
 import './style.css'
-import * as td from './todo.js'
+import * as td from './helpers.js'
 import { Todo } from './model/todo.ts'
 
 const todos = td.loadTodoOrNull() ?? [new Todo('Example')]
