@@ -28,4 +28,9 @@ describe('template spec', () => {
     cy.contains('done').should('be.visible').click()
     cy.get('[id*=done-button]').should('be.enabled')
   })
+  it('filter for done todos', () => {
+    cy.contains('Example').should('be.visible')
+    cy.get('#filter-select').select('done')
+	cy.get('.todo').should('have.length', 0)
+  })
 })
