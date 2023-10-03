@@ -58,6 +58,11 @@ describe('export todo', () => {
     const todo = new Todo('test', 12345)
     expect(JSON.stringify(todo.export())).toBe('{"text":"test","done":false,"skip":false,"id":12345}')
   })
+  test('export to json (modified)', () => {
+    const todo = new Todo('test', 12345)
+    todo.toggleDone();
+    expect(JSON.stringify(todo.export())).toBe('{"text":"test","done":true,"skip":false,"id":12345}')
+  })
 })
 describe('import todo', () => {
   test('should import todo from tododata', () => {
