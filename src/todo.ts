@@ -1,20 +1,4 @@
-export type ID = string
-
-export interface Todo {
-  text: string
-  done: boolean
-  skip: boolean
-  id: ID
-}
-
-export function newTodo (t: string): Todo {
-  return {
-    text: t,
-    done: false,
-    skip: false,
-    id: crypto.randomUUID()
-  }
-}
+import { type Todo, type ID } from './model/todo.ts'
 
 export function genereateNode (todo: Todo): HTMLDivElement {
   const todoNode = document.createElement('div')
@@ -29,7 +13,7 @@ export function genereateNode (todo: Todo): HTMLDivElement {
   todoNode.setAttribute('class', 'todo')
 
   inputDone.setAttribute('type', 'checkbox')
-  inputDone.setAttribute('value', todo.id)
+  inputDone.setAttribute('value', todo.id.toString())
   inputDone.setAttribute('id', `done-button#${todo.id}`)
   if (todo.done) {
     inputDone.checked = true
@@ -43,7 +27,7 @@ export function genereateNode (todo: Todo): HTMLDivElement {
   labelDone.textContent = 'done'
 
   inputSkip.setAttribute('type', 'checkbox')
-  inputSkip.setAttribute('value', todo.id)
+  inputSkip.setAttribute('value', todo.id.toString())
   inputSkip.setAttribute('id', `skip-button#${todo.id}`)
   if (todo.skip) {
     inputSkip.checked = true
@@ -57,7 +41,7 @@ export function genereateNode (todo: Todo): HTMLDivElement {
   labelSkip.textContent = 'skip'
 
   inputDelete.setAttribute('type', 'button')
-  inputDelete.setAttribute('value', todo.id)
+  inputDelete.setAttribute('value', todo.id.toString())
   inputDelete.setAttribute('id', 'delete-button')
   inputDelete.setAttribute('id', `delete-button#${todo.id}`)
   inputDelete.innerHTML = 'x'
