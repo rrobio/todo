@@ -47,6 +47,10 @@ renderTodos(todos);
 
 (document.getElementById('filter-select') as HTMLSelectElement).addEventListener('change', () => { renderTodos(todos) })
 
+document.addEventListener('renderTodos', () => {
+  renderTodos(todos)
+})
+
 document.addEventListener('deleteTodo', (e) => {
   const target = e.target as HTMLButtonElement
   td.removeTodoByID(todos, +target.value)
