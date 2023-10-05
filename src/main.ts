@@ -1,5 +1,5 @@
 import './style.css'
-import * as td from './helpers.js'
+import * as helpers from './helpers.js'
 import { Todo } from './model/todo.ts'
 import generateNode from './model/todoElement.ts'
 import LocalStorageRepository from './repository/localstorage.ts'
@@ -63,7 +63,7 @@ document.addEventListener('deleteTodo', (e) => {
 
 document.addEventListener('toggleTodo', (e) => {
   const target = e.target as HTMLInputElement
-  const todo = td.toggleTodoByID(todos, +target.value)
+  const todo = helpers.toggleTodoByID(todos, +target.value)
   if (todo !== null) {
     repository.setAll(todos)
     renderTodos(todos)
@@ -72,7 +72,7 @@ document.addEventListener('toggleTodo', (e) => {
 
 document.addEventListener('toggleSkip', (e) => {
   const target = e.target as HTMLInputElement
-  const todo = td.skipTodoByID(todos, +target.value)
+  const todo = helpers.skipTodoByID(todos, +target.value)
   if (todo !== null) {
     repository.setAll(todos)
     renderTodos(todos)
