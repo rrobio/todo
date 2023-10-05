@@ -6,6 +6,7 @@ export interface IComapreID {
 }
 
 export default interface IRepository<T> {
+  getBaseTypeName: () => string
   getAll: () => T[]
   get: (id: ID) => T | null
   add: (item: T) => boolean
@@ -16,6 +17,10 @@ export default interface IRepository<T> {
 
 export class Repository<T> {
   constructor (private readonly storage: IRepository<T>) {
+  }
+
+  public getBaseTypeName (): string {
+    return this.storage.getBaseTypeName()
   }
 
   getAll (): T[] {

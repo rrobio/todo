@@ -8,6 +8,10 @@ export default class LocalStorageRepository<T extends IComapreID> implements IRe
     this.storageKey = `localstoragerepository#${Base.name}`
   }
 
+  public getBaseTypeName (): string {
+    return this.Base.name
+  }
+
   private getJSON (): string | null {
     return localStorage.getItem(this.storageKey)
   }
