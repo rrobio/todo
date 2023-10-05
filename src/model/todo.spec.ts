@@ -1,18 +1,25 @@
 import { Todo, type TodoData } from './todo.ts'
 import { faker } from '@faker-js/faker'
+import MockDatabase from '../repository/mockdatabase.ts'
+import { Repository } from '../repository/repository.ts'
 
 function getRandomTodoData (): TodoData {
   return {
     text: faker.lorem.lines(2),
+    id: +faker.date.anytime(),
     done: faker.datatype.boolean(),
-    skip: faker.datatype.boolean(),
-    id: +faker.date.anytime()
+    skip: faker.datatype.boolean()
   }
 }
 
 function todoFactory (data: Partial<TodoData>): Todo {
   const randomData = getRandomTodoData()
   return Todo.clone(data.text ?? randomData.text, data.done ?? randomData.done, data.skip ?? randomData.skip, data.id ?? randomData.id)
+}
+
+function todoArrayFactory (n: number): Todo[] {
+  // generate n random todos
+  return [...Array(n).keys()].map(() => todoFactory({}))
 }
 
 describe('Todo creation', () => {
@@ -96,5 +103,85 @@ describe('import todo', () => {
     const todo2 = todoFactory(JSON.parse(JSON.stringify(todo1.export())))
     expect(todo2).toBeInstanceOf(Todo)
     expect(todo2.export()).toStrictEqual(todo1.export())
+  })
+})
+describe('repository tests', () => {
+  describe('setting todos', () => {
+    test('should set all todos', () => {
+      const repository = new Repository(new MockDatabase(Todo))
+      const todos = todoArrayFactory(5)
+      repository.setAll(todos)
+      repository.getAll()?.forEach((e: Todo, i: number) => {
+        expect(todos[i]).toStrictEqual(e)
+      })
+    })
+    test('should set specific', () => {
+      const repository = new Repository(new MockDatabase(Todo))
+      const todos = todoArrayFactory(5)
+      repository.setAll(todos)
+
+      // change a todo
+      todos[0] = todoFactory({})
+      repository.set(todos[0])
+
+      repository.getAll()?.forEach((e: Todo, i: number) => {
+        expect(todos[i]).toStrictEqual(e)
+      })
+    })
+  })
+  describe('getting todos', () => {
+    test('should get all todos', () => {
+      const nTodos = 5
+      const repository = new Repository(new MockDatabase(Todo, todoArrayFactory(nTodos)))
+      const todos = repository.getAll() ?? []
+      expect(todos.length).toBe(nTodos)
+    })
+    test('should get specific', () => {
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+
+      const repository = new Repository(new MockDatabase(Todo, todos))
+
+      const gotTodo = repository.get(todos[0].getID())
+      expect(gotTodo).not.toBeNull()
+      expect(gotTodo).toStrictEqual(todos[0])
+    })
+  })
+  describe('adding a todo', () => {
+    test('should add 5 todo', () => {
+      const repository = new Repository(new MockDatabase(Todo))
+      for (let i = 0; i < 5; i++) {
+        const newTodo = todoFactory({})
+        repository.add(newTodo)
+      }
+
+      const todos = repository.getAll() ?? []
+      expect(todos.length).toStrictEqual(5)
+    })
+    test('should add a todo', () => {
+      const nTodos = 5
+      const repository = new Repository(new MockDatabase(Todo, todoArrayFactory(nTodos)))
+      const newTodo = todoFactory({})
+      repository.add(newTodo)
+
+      const todos = repository.getAll() ?? []
+      expect(todos[todos.length - 1]).toStrictEqual(newTodo)
+    })
+  })
+  describe('reomving a todo', () => {
+    test('should remove a todo', () => {
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+      const repository = new Repository(new MockDatabase(Todo, todos))
+      expect(repository.getAll()?.length).toStrictEqual(5)
+      repository.remove(todos[0])
+      expect(repository.getAll()?.length).toStrictEqual(4)
+    })
+    test('should fail to remove a nonexistent todo', () => {
+      const repository = new Repository(new MockDatabase(Todo, todoArrayFactory(5)))
+      expect(repository.getAll()?.length).toStrictEqual(5)
+      expect(repository.remove(new Todo('asd', -1))).toBe(false)
+      expect(repository.getAll()?.length).toBe(5)
+    })
   })
 })

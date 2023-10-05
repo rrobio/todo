@@ -2,8 +2,11 @@ import './style.css'
 import * as td from './helpers.js'
 import { Todo } from './model/todo.ts'
 import generateNode from './model/todoElement.ts'
+import LocalStorageRepository from './repository/localstorage.ts'
+import { Repository } from './repository/repository.ts'
 
-const todos = td.loadTodoOrNull() ?? [new Todo('Example')]
+const repository = new Repository(new LocalStorageRepository(Todo))
+let todos = repository.getAll()
 
 function getFilter (): string {
   return (document.getElementById('filter-select') as HTMLSelectElement).value
@@ -36,10 +39,10 @@ renderTodos(todos);
   const elem = document.querySelector('#new-todo-text') as HTMLTextAreaElement
   const value = elem.value === '' ? 'empty' : elem.value
   elem.value = ''
-  const nt = new Todo(value)
-  todos.push(nt)
+  const newTodo = new Todo(value)
+  todos.push(newTodo)
   renderTodos(todos)
-  td.saveTodo(todos)
+  repository.setAll(todos)
 });
 
 (document.getElementById('filter-select') as HTMLSelectElement).addEventListener('change', () => { renderTodos(todos) })
@@ -50,23 +53,28 @@ document.addEventListener('renderTodos', () => {
 
 document.addEventListener('deleteTodo', (e) => {
   const target = e.target as HTMLButtonElement
-  td.removeTodoByID(todos, +target.value)
-  renderTodos(todos)
-  td.saveTodo(todos)
+  const todo = repository.get(+target.value)
+  if (todo !== null) {
+    repository.remove(todo)
+    todos = repository.getAll() ?? []
+    renderTodos(todos)
+  }
 })
 
 document.addEventListener('toggleTodo', (e) => {
   const target = e.target as HTMLInputElement
-  td.toggleTodoByID(todos, +target.value)
-  renderTodos(todos)
-  td.saveTodo(todos)
+  const todo = td.toggleTodoByID(todos, +target.value)
+  if (todo !== null) {
+    repository.setAll(todos)
+    renderTodos(todos)
+  }
 })
 
 document.addEventListener('toggleSkip', (e) => {
   const target = e.target as HTMLInputElement
-  td.skipTodoByID(todos, +target.value)
-  td.pushBackTodo(todos, +target.value)
-  renderTodos(todos)
-  td.saveTodo(todos)
+  const todo = td.skipTodoByID(todos, +target.value)
+  if (todo !== null) {
+    repository.setAll(todos)
+    renderTodos(todos)
+  }
 })
-// setupCounter(document.querySelector('#counter'))

@@ -1,23 +1,44 @@
-export type ID = number
+import { type ID } from '../repository/repository'
 
 export interface TodoData {
   text: string
+  id: ID
   done: boolean
   skip: boolean
-  id: ID
 }
 
 export class Todo implements TodoData {
   public text: string
+  public id: ID
   public done: boolean
   public skip: boolean
-  public id: ID
 
-  constructor (text: string, id?: ID) {
-    this.text = text
-    this.done = false
-    this.skip = false
-    this.id = id ?? +new Date()
+  constructor (data: TodoData)
+  constructor (data: string, id?: ID)
+  constructor (data: TodoData | string, id?: ID) {
+    if (typeof data === 'object') {
+      this.text = data.text ?? 'empty'
+      this.id = data.id ?? +new Date()
+      this.done = data.done ?? false
+      this.skip = data.skip ?? false
+    } else {
+      this.text = data
+      this.id = id ?? +new Date()
+      this.done = false
+      this.skip = false
+    }
+  }
+
+  public same (other: Todo): boolean {
+    return this.id === other.id
+  }
+
+  public getID (): ID {
+    return this.id
+  }
+
+  public sameID (other: ID): boolean {
+    return this.id === other
   }
 
   public static clone (text: string, done: boolean, skip: boolean, id: ID): Todo {
