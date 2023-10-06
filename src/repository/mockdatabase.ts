@@ -50,8 +50,9 @@ export default class MockDataRepository<T extends IComapreID> implements IReposi
       } else { // push back new
         this.storage.push(item)
       }
+    } else {
+      // empty storage
+      this.storage = [item]
     }
-    // empty storage
-    this.storage = [item]
   }
 }
