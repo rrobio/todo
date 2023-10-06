@@ -20,7 +20,7 @@ export default class LocalStorageRepository<T extends IComapreID> implements IRe
     const jsondata = this.getJSON()
     if (typeof jsondata === 'string') {
       const data = JSON.parse(jsondata)
-      return data.map((e: any) => new this.Base(e))
+      return data.map((e: unknown) => new this.Base(e))
     }
     return []
   }
@@ -29,7 +29,7 @@ export default class LocalStorageRepository<T extends IComapreID> implements IRe
     const jsonData = this.getJSON()
     if (typeof jsonData === 'string') {
       const items = JSON.parse(jsonData)
-      const index = items.findIndex((e: any) => e.id === id)
+      const index = items.findIndex((e: IComapreID) => e.id === id)
       if (index >= 0) {
         return new this.Base(items[index])
       }
@@ -46,7 +46,7 @@ export default class LocalStorageRepository<T extends IComapreID> implements IRe
 
   public remove (item: T): boolean {
     const items = this.getAll() ?? []
-    const index = items.findIndex((e: any) => item.sameID(e.id))
+    const index = items.findIndex((e: IComapreID) => item.sameID(e.id))
     if (index >= 0) {
       items.splice(index, 1)
       this.setAll(items)
