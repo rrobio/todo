@@ -23,12 +23,33 @@ function todoArrayFactory (n: number): Todo[] {
 }
 
 describe('Todo creation', () => {
-  test('should create new todo', () => {
+  test('should create new todo from data object', () => {
     const data = getRandomTodoData()
-    const todo = todoFactory(data)
+    const todo = new Todo(data)
+    expect(todo).toBeInstanceOf(Todo)
+    expect(todo.text).toBe(data.text)
+    expect(todo.id).toBe(data.id)
+    expect(todo.done).toBe(data.done)
+    expect(todo.skip).toBe(data.skip)
+    expect(todo.id).not.toBeNull()
+  })
+  test('should create new todo from string and id', () => {
+    const data = getRandomTodoData()
+    const todo = new Todo(data.text, data.id)
+    expect(todo).toBeInstanceOf(Todo)
+    expect(todo.text).toBe(data.text)
+    expect(todo.id).toBe(data.id)
+    expect(todo.done).toBe(false)
+    expect(todo.skip).toBe(false)
+  })
+  test('should create new todo just from string', () => {
+    const data = getRandomTodoData()
+    const todo = new Todo(data.text)
     expect(todo).toBeInstanceOf(Todo)
     expect(todo.text).toBe(data.text)
     expect(todo.id).not.toBeNull()
+    expect(todo.done).toBe(false)
+    expect(todo.skip).toBe(false)
   })
 })
 describe('toggle Todo state', () => {
@@ -106,6 +127,13 @@ describe('import todo', () => {
   })
 })
 describe('repository tests', () => {
+  describe('instantiate repository', () => {
+    test('create repository with mockdatabase', () => {
+      const repository = new Repository(new MockDatabase(Todo))
+      expect(repository).not.toBeNull()
+      expect(repository.getBaseTypeName()).toBe('Todo')
+    })
+  })
   describe('setting todos', () => {
     test('should set all todos', () => {
       const repository = new Repository(new MockDatabase(Todo))
@@ -139,12 +167,70 @@ describe('repository tests', () => {
     test('should get specific', () => {
       const nTodos = 5
       const todos = todoArrayFactory(nTodos)
-
       const repository = new Repository(new MockDatabase(Todo, todos))
 
       const gotTodo = repository.get(todos[0].getID())
       expect(gotTodo).not.toBeNull()
       expect(gotTodo).toStrictEqual(todos[0])
+    })
+    test('get nonexistent', () => {
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+      const repository = new Repository(new MockDatabase(Todo, todos))
+
+      const gotTodo = repository.get(todoFactory({}).id)
+      expect(gotTodo).toBeNull()
+    })
+  })
+  describe('setting todos', () => {
+    test('set all', () => {
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+      const repository = new Repository(new MockDatabase(Todo))
+      repository.setAll(todos)
+      expect(repository.getAll().length).toBe(nTodos)
+    })
+    test('should set a todo', () => {
+      // add 5 random todos
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+      const repository = new Repository(new MockDatabase(Todo))
+      repository.setAll(todos)
+      expect(repository.getAll().length).toBe(nTodos)
+      // get the first todo
+      const todo = repository.get(todos[0].id)
+      expect(todo).not.toBeNull()
+      if (todo === null) {
+        fail('it should not reach here')
+      } else {
+        expect(repository.get(todo.id)).toBe(todo)
+        // update todo
+        todo.toggleDone()
+        todo.toggleSkip()
+
+        // set in repository
+        repository.set(todo)
+        expect(repository.getAll().length).toBe(nTodos)
+        expect(repository.get(todo.id)).not.toBeNull()
+        expect(repository.get(todo.id)).toStrictEqual(todo)
+      }
+    })
+    test('should add new when setting on empty repository', () => {
+      const repository = new Repository(new MockDatabase(Todo))
+      expect(repository.getAll().length).toBe(0)
+      const todo = todoFactory({})
+      repository.set(todo)
+      expect(repository.getAll().length).toBe(1)
+      expect(repository.get(todo.id)).toStrictEqual(todo)
+    })
+    test('should pushback new', () => {
+      const repository = new Repository(new MockDatabase(Todo))
+      repository.set(todoFactory({}))
+      expect(repository.getAll().length).toBe(1)
+      const todo = todoFactory({})
+      repository.set(todo)
+      expect(repository.getAll().length).toBe(2)
+      expect(repository.get(todo.id)).toStrictEqual(todo)
     })
   })
   describe('adding a todo', () => {
