@@ -17,20 +17,16 @@ export class Todo implements TodoData {
   constructor (data: string, id?: ID)
   constructor (data: TodoData | string, id?: ID) {
     if (typeof data === 'object') {
-      this.text = data.text ?? 'empty'
-      this.id = data.id ?? +new Date()
-      this.done = data.done ?? false
-      this.skip = data.skip ?? false
+      this.text = data.text
+      this.id = data.id
+      this.done = data.done
+      this.skip = data.skip
     } else {
       this.text = data
       this.id = id ?? +new Date()
       this.done = false
       this.skip = false
     }
-  }
-
-  public same (other: Todo): boolean {
-    return this.id === other.id
   }
 
   public getID (): ID {
@@ -50,10 +46,6 @@ export class Todo implements TodoData {
 
   public export (): TodoData {
     return this as TodoData
-  }
-
-  public static import (td: TodoData): Todo {
-    return Todo.clone(td.text, td.done, td.skip, td.id)
   }
 
   public toggleDone (): void {
