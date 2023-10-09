@@ -1,51 +1,57 @@
 export type ID = number
+export function nextID (id?: ID): ID { // helper function za sljedeci moguci id, ovo je trivijalno za number ali moze se promijeniti ako je string ili symbol
+  if (id === undefined) {
+    return 0
+  } else {
+    return id + 1
+  }
+}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type IConstructor<T> = new (...args: any[]) => T
-export interface IComapreID {
+export interface IHasID {
   id: ID
-  sameID: (other: ID) => boolean
-  getID: () => ID
 }
 
-export default interface IRepository<T> {
-  getBaseTypeName: () => string
-  getAll: () => T[]
-  get: (id: ID) => T | null
-  add: (item: T) => boolean
-  remove: (item: T) => boolean
-  setAll: (all: T[]) => void
-  set: (item: T) => void
+export interface IStorage {
+  getAll: () => unknown[]
+  get: (id: ID) => unknown | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getBy: (compareFn: (other: any) => boolean) => unknown | null
+  add: (item: unknown, id?: ID) => ID
+  remove: (id: ID) => boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  removeBy: (compareFn: (other: any) => boolean) => boolean
+  set: (id: ID, item: unknown) => boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setBy: (item: unknown, compareFn: (other: any) => boolean) => boolean
 }
 
-export class Repository<T> {
-  constructor (private readonly storage: IRepository<T>) {
+export default class ModelRepository<Value extends IHasID> {
+  constructor (private readonly Base: IConstructor<Value>, private readonly storage: IStorage) {
   }
 
-  public getBaseTypeName (): string {
-    return this.storage.getBaseTypeName()
+  public getAll (): Value[] {
+    const data = this.storage.getAll()
+    return data.map(d => Object.assign(new this.Base(), d))
   }
 
-  getAll (): T[] {
-    return this.storage.getAll()
+  public get (id: ID): Value | null {
+    const got = this.storage.get(id)
+    if (got !== null) {
+      return Object.assign(new this.Base(), got)
+    }
+    return null
   }
 
-  get (id: ID): T | null {
-    return this.storage.get(id)
+  public add (item: Value): ID {
+    return this.storage.add(item, item.id)
   }
 
-  add (item: T): boolean {
-    return this.storage.add(item)
+  public remove (item: Value): boolean {
+    return this.storage.remove(item.id)
   }
 
-  remove (item: T): boolean {
-    return this.storage.remove(item)
-  }
-
-  setAll (all: T[]): void {
-    this.storage.setAll(all)
-  }
-
-  set (item: T): void {
-    this.storage.set(item)
+  public set (item: Value): boolean {
+    return this.storage.set(item.id, item)
   }
 }

@@ -1,5 +1,14 @@
 import { faker } from '@faker-js/faker'
-import { Todo, type TodoData } from '../model/todo'
+import { Todo } from '../model/todo'
+import ModelRepository, { type ID } from '../repository/repository'
+import InMemoryStorage from '../storage/inmemory'
+
+export interface TodoData {
+  text: string
+  id: ID
+  done: boolean
+  skip: boolean
+}
 
 export function getRandomTodoData (): TodoData {
   return {
@@ -12,10 +21,18 @@ export function getRandomTodoData (): TodoData {
 
 export function todoFactory (data: Partial<TodoData>): Todo {
   const randomData = getRandomTodoData()
-  return Todo.clone(data.text ?? randomData.text, data.done ?? randomData.done, data.skip ?? randomData.skip, data.id ?? randomData.id)
+  return new Todo(data.text ?? randomData.text, data.done ?? randomData.done, data.skip ?? randomData.skip, data.id ?? randomData.id)
 }
 
 export function todoArrayFactory (n: number): Todo[] {
   // generate n random todos
   return [...Array(n).keys()].map(() => todoFactory({}))
+}
+
+export function repositoryFactory (data?: Todo[]): ModelRepository<Todo> {
+  const repository = new ModelRepository(Todo, new InMemoryStorage())
+  if (data !== null) {
+    data?.forEach(e => repository.add(e))
+  }
+  return repository
 }

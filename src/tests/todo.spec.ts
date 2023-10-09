@@ -1,11 +1,11 @@
 import { Todo } from '../model/todo.ts'
 
-import { getRandomTodoData, todoFactory } from './helpers.ts'
+import { type TodoData, getRandomTodoData, todoFactory } from './helpers.ts'
 
 describe('Todo creation', () => {
   test('should create new todo from data object', () => {
     const data = getRandomTodoData()
-    const todo = new Todo(data)
+    const todo = todoFactory(data)
     expect(todo).toBeInstanceOf(Todo)
     expect(todo.text).toBe(data.text)
     expect(todo.id).toBe(data.id)
@@ -15,16 +15,16 @@ describe('Todo creation', () => {
   })
   test('should create new todo from string and id', () => {
     const data = getRandomTodoData()
-    const todo = new Todo(data.text, data.id)
+    const todo = todoFactory({ text: data.text, done: false, skip: false, id: data.id })
     expect(todo).toBeInstanceOf(Todo)
     expect(todo.text).toBe(data.text)
     expect(todo.id).toBe(data.id)
     expect(todo.done).toBe(false)
     expect(todo.skip).toBe(false)
   })
-  test('should create new todo just from string', () => {
+  test('should create new todo', () => {
     const data = getRandomTodoData()
-    const todo = new Todo(data.text)
+    const todo = todoFactory({ text: data.text, done: false, skip: false })
     expect(todo).toBeInstanceOf(Todo)
     expect(todo.text).toBe(data.text)
     expect(todo.id).not.toBeNull()
@@ -51,32 +51,17 @@ describe('recreate Todo', () => {
     const todo1 = todoFactory({})
     expect(todo1).toBeInstanceOf(Todo)
     todo1.toggleDone()
-    const todo2 = Todo.clone(todo1.text, todo1.done, todo1.skip, todo1.id)
-    expect(todo1.export()).toStrictEqual(todo2.export())
+    const todo2 = new Todo(todo1.text, todo1.done, todo1.skip, todo1.id)
+    expect(todo1 as TodoData).toStrictEqual(todo2 as TodoData)
   })
   test('done state should not be equal', () => {
     const todo1 = todoFactory({})
     expect(todo1).toBeInstanceOf(Todo)
-    const todo2 = Todo.clone(todo1.text, todo1.done, todo1.skip, todo1.id)
+    const todo2 = new Todo(todo1.text, todo1.done, todo1.skip, todo1.id)
     todo1.toggleDone()
     expect(todo2.text).toBe(todo1.text)
     expect(todo2.done).not.toBe(todo1.done)
     expect(todo2.skip).toBe(todo1.skip)
     expect(todo2.id).toBe(todo1.id)
-  })
-})
-describe('export todo', () => {
-  test('should export todo into a tododata object', () => {
-    const data = getRandomTodoData()
-    const todo = todoFactory(data)
-    expect(todo.export().text).toBe(data.text)
-    expect(todo.export().id).toBe(data.id)
-  })
-})
-describe('import todo', () => {
-  test('should import todo from tododata', () => {
-    const data = getRandomTodoData()
-    const todo = todoFactory(data)
-    expect(todo.export()).toEqual(data)
   })
 })

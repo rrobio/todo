@@ -6,14 +6,14 @@ describe('serialization', () => {
   test('export to json', () => {
     const data = getRandomTodoData()
     const todo = todoFactory(data)
-    expect(JSON.stringify(todo.export())).toBe(JSON.stringify(data))
+    expect(JSON.stringify(todo)).toBe(JSON.stringify(data))
   })
   test('export to json after modifying', () => {
     const data = getRandomTodoData()
     const todo = todoFactory(data)
-    expect(JSON.stringify(todo.export())).toBe(JSON.stringify(data))
+    expect(JSON.stringify(todo)).toBe(JSON.stringify(data))
     todo.toggleDone()
-    expect(JSON.stringify(todo.export())).not.toBe(JSON.stringify(data))
+    expect(JSON.stringify(todo)).not.toBe(JSON.stringify(data))
   })
 })
 describe('deserialization', () => {
@@ -29,8 +29,8 @@ describe('deserialization', () => {
   test('should be equal when importing from export', () => {
     const data = getRandomTodoData()
     const todo1 = todoFactory(data)
-    const todo2 = todoFactory(JSON.parse(JSON.stringify(todo1.export())))
+    const todo2 = todoFactory(JSON.parse(JSON.stringify(todo1)))
     expect(todo2).toBeInstanceOf(Todo)
-    expect(todo2.export()).toStrictEqual(todo1.export())
+    expect(todo2).toStrictEqual(todo1)
   })
 })

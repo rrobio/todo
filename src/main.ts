@@ -1,12 +1,10 @@
 import './style.css'
-import * as helpers from './helpers.js'
 import { Todo } from './model/todo.ts'
 import generateNode from './model/todoElement.ts'
-import LocalStorageRepository from './repository/localstorage.ts'
-import { Repository } from './repository/repository.ts'
+import LocalStorage from './storage/localstorage.ts'
+import ModelRepository from './repository/repository.ts'
 
-const repository = new Repository(new LocalStorageRepository(Todo))
-let todos = repository.getAll()
+const repository = new ModelRepository(Todo, new LocalStorage('Todo'))
 
 function getFilter (): string {
   return (document.getElementById('filter-select') as HTMLSelectElement).value
@@ -33,22 +31,21 @@ function renderTodos (todos: Todo[]): void {
     })
 }
 
-renderTodos(todos);
+renderTodos(repository.getAll());
 
 (document.querySelector('#new-todo') as HTMLButtonElement).addEventListener('click', () => {
   const elem = document.querySelector('#new-todo-text') as HTMLTextAreaElement
   const value = elem.value === '' ? 'empty' : elem.value
   elem.value = ''
-  const newTodo = new Todo(value)
-  todos.push(newTodo)
-  renderTodos(todos)
-  repository.setAll(todos)
+  const newTodo = new Todo(value, false, false)
+  repository.add(newTodo)
+  renderTodos(repository.getAll())
 });
 
-(document.getElementById('filter-select') as HTMLSelectElement).addEventListener('change', () => { renderTodos(todos) })
+(document.getElementById('filter-select') as HTMLSelectElement).addEventListener('change', () => { renderTodos(repository.getAll()) })
 
 document.addEventListener('renderTodos', () => {
-  renderTodos(todos)
+  renderTodos(repository.getAll())
 })
 
 document.addEventListener('deleteTodo', (e) => {
@@ -56,25 +53,26 @@ document.addEventListener('deleteTodo', (e) => {
   const todo = repository.get(+target.value)
   if (todo !== null) {
     repository.remove(todo)
-    todos = repository.getAll() ?? []
-    renderTodos(todos)
+    renderTodos(repository.getAll())
   }
 })
 
 document.addEventListener('toggleTodo', (e) => {
   const target = e.target as HTMLInputElement
-  const todo = helpers.toggleTodoByID(todos, +target.value)
+  const todo = repository.get(+target.value)
   if (todo !== null) {
-    repository.setAll(todos)
-    renderTodos(todos)
+    todo.toggleDone()
+    repository.set(todo)
+    renderTodos(repository.getAll())
   }
 })
 
 document.addEventListener('toggleSkip', (e) => {
   const target = e.target as HTMLInputElement
-  const todo = helpers.skipTodoByID(todos, +target.value)
+  const todo = repository.get(+target.value)
   if (todo !== null) {
-    repository.setAll(todos)
-    renderTodos(todos)
+    todo.toggleSkip()
+    repository.set(todo)
+    renderTodos(repository.getAll())
   }
 })
