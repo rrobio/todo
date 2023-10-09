@@ -8,7 +8,6 @@ export default class LocalStorage implements IStorage {
   }
 
   private getLocalStorage (): Map<ID, unknown> {
-    console.log(localStorage.getItem(this.storageKey))
     return new Map(JSON.parse(localStorage.getItem(this.storageKey) ?? '[]'))
   }
 
