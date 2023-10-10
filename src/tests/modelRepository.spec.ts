@@ -1,7 +1,17 @@
-import { Todo } from '../model/todo.ts'
-import { repositoryFactory, todoArrayFactory, todoFactory } from './helpers.ts'
+import { Todo } from '../model/todo'
+import ModelRepository from '../repository/repository'
+import InMemoryStorage from '../storage/inmemory'
+import { todoArrayFactory, todoFactory } from './helpers'
 
-describe('Repositroy', () => {
+export function repositoryFactory (data?: Todo[]): ModelRepository<Todo> {
+  const repository = new ModelRepository(Todo, new InMemoryStorage())
+  if (data !== null) {
+    data?.forEach(e => repository.add(e))
+  }
+  return repository
+}
+
+describe('ModelRepositroy', () => {
   describe('instantiate repository', () => {
     test('create repository with mockdatabase', () => {
       const repository = repositoryFactory()
@@ -54,6 +64,23 @@ describe('Repositroy', () => {
 
       const gotTodo = repository.get(todoFactory({ id: -1 }).id)
       expect(gotTodo).toBeNull()
+    })
+    test('should get with comparison function', () => {
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+      const repository = repositoryFactory(todos)
+      repository.add(new Todo('asdf', true, true))
+      const got = repository.getBy((a) => a.done && a.text === 'asdf')
+      expect(got).not.toBe(null)
+      expect(got?.text).toStrictEqual('asdf')
+    })
+    test('should fail with comparison function', () => {
+      const nTodos = 5
+      const todos = todoArrayFactory(nTodos)
+      const repository = repositoryFactory(todos)
+      repository.add(new Todo('asdf', true, true))
+      const got = repository.getBy(() => false)
+      expect(got).toBe(null)
     })
   })
   describe('setting todos', () => {

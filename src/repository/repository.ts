@@ -26,8 +26,57 @@ export interface IStorage {
   setBy: (item: unknown, compareFn: (other: any) => boolean) => boolean
 }
 
-export default class ModelRepository<Value extends IHasID> {
+abstract class Repository<T> {
+  abstract getAll (): T[]
+  abstract get (id: ID): T | null
+  abstract getBy (compareFn: (other: T) => boolean): T | null
+  abstract add (item: T): ID
+  abstract remove (item: T): boolean
+  abstract set (item: T): boolean
+}
+
+// for data types with no constructors
+export class SimpleRepository<Value> extends Repository<Value> {
+  constructor (private readonly storage: IStorage) {
+    super()
+  }
+
+  getAll (): Value[] {
+    return this.storage.getAll() as Value[]
+  }
+
+  get (id: number): Value | null {
+    return this.storage.get(id) as Value
+  }
+
+  getBy (compareFn: (other: Value) => boolean): Value | null {
+    const ret = this.storage.getBy(compareFn)
+    if (ret === null) return null
+    return ret as Value
+  }
+
+  add (item: Value): number {
+    return this.storage.add(item)
+  }
+
+  remove (item: Value): boolean {
+    return this.storage.removeBy((other: Value) => {
+      return item === other
+    })
+  }
+
+  set (item: Value, id?: ID): boolean {
+    if (id === undefined) {
+      return false
+    } else {
+      return this.storage.set(id, item)
+    }
+  }
+}
+
+export default class ModelRepository<Value extends IHasID> extends Repository<Value> {
   constructor (private readonly Base: IConstructor<Value>, private readonly storage: IStorage) {
+    super()
   }
 
   public getAll (): Value[] {
@@ -41,6 +90,12 @@ export default class ModelRepository<Value extends IHasID> {
       return Object.assign(new this.Base(), got)
     }
     return null
+  }
+
+  getBy (compareFn: (other: Value) => boolean): Value | null {
+    const ret = this.storage.getBy(compareFn)
+    if (ret === null) return null
+    return Object.assign(new this.Base(), ret)
   }
 
   public add (item: Value): ID {
