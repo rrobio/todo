@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { SimpleRepository } from '../repository/repository'
+import { SimpleRepository } from '../repository/SimpleRepository'
 import InMemoryStorage from '../storage/inmemory'
 
 function randomArray (n: number): number[] {

@@ -1,5 +1,5 @@
 import { Todo } from '../model/todo'
-import ModelRepository from '../repository/repository'
+import ModelRepository from '../repository/ModelRepository'
 import InMemoryStorage from '../storage/inmemory'
 import { todoArrayFactory, todoFactory } from './helpers'
 

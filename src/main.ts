@@ -2,7 +2,7 @@ import './style.css'
 import { Todo } from './model/todo.ts'
 import generateNode from './model/todoElement.ts'
 import LocalStorage from './storage/localstorage.ts'
-import ModelRepository from './repository/repository.ts'
+import ModelRepository from './repository/ModelRepository.ts'
 
 const repository = new ModelRepository(Todo, new LocalStorage('Todo'))
 
