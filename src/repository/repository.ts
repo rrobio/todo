@@ -28,9 +28,8 @@ export interface IStorage {
 
 export abstract class Repository<T> {
   abstract getAll (): T[]
-  abstract get (id: ID): T | null
-  abstract getBy (compareFn: (other: T) => boolean): T | null
-  abstract add (item: T): ID
+  abstract get (id: number): T | null
+  abstract add (item: T): number
   abstract remove (item: T): boolean
   abstract set (item: T): boolean
 }

@@ -7,11 +7,11 @@ export default class LocalStorage implements IStorage {
     this.storageKey = `localstoragerepository#${name}`
   }
 
-  private getLocalStorage (): Map<ID, unknown> {
+  private getLocalStorage (): Map<number, unknown> {
     return new Map(JSON.parse(localStorage.getItem(this.storageKey) ?? '[]'))
   }
 
-  private saveLocalStorage (data: Map<ID, unknown>): void {
+  private saveLocalStorage (data: Map<number, unknown>): void {
     localStorage.setItem(this.storageKey, JSON.stringify(Array.from(data.entries())))
   }
 
@@ -20,20 +20,11 @@ export default class LocalStorage implements IStorage {
     return [...data.values()]
   }
 
-  public get (id: ID): unknown {
+  public get (id: number): unknown {
     return this.getLocalStorage().get(id)
   }
 
-  public getBy (compareFn: (other: unknown) => boolean): unknown {
-    for (const e of this.getLocalStorage().values()) {
-      if (compareFn(e)) {
-        return e
-      }
-    }
-    return null
-  }
-
-  public add (item: unknown, id?: ID): ID {
+  public add (item: unknown, id?: number): number {
     if (id !== undefined) {
       const data = this.getLocalStorage()
       data.set(id, item)

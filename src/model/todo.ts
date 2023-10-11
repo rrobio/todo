@@ -1,14 +1,12 @@
-import { type ID } from '../repository/repository'
-
 export class Todo {
   public text: string
-  public id: ID
+  public id?: number
   public done: boolean
   public skip: boolean
 
-  constructor (text: string, done: boolean, skip: boolean, id?: ID) {
+  constructor (text: string, done: boolean = false, skip: boolean = false, id?: number) {
     this.text = text
-    this.id = id ?? +new Date()
+    this.id = id
     this.done = done
     this.skip = skip
   }

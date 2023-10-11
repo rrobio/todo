@@ -1,10 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { Todo } from '../model/todo'
-import { type ID } from '../repository/repository'
 
 export interface TodoData {
   text: string
-  id: ID
+  id: number
   done: boolean
   skip: boolean
 }

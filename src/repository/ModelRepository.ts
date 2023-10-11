@@ -1,6 +1,6 @@
 import { type IHasID, Repository, type IConstructor, type IStorage, type ID } from './repository'
 
-export default class ModelRepository<Value extends IHasID> extends Repository<Value> {
+export default class ModelRepository<Value extends { id?: number } > extends Repository<Value> {
   constructor (private readonly Base: IConstructor<Value>, private readonly storage: IStorage) {
     super()
   }
@@ -10,7 +10,7 @@ export default class ModelRepository<Value extends IHasID> extends Repository<Va
     return data.map(d => Object.assign(new this.Base(), d))
   }
 
-  public get (id: ID): Value | null {
+  public get (id: number): Value | null {
     const got = this.storage.get(id)
     if (got !== null) {
       return Object.assign(new this.Base(), got)
@@ -18,13 +18,7 @@ export default class ModelRepository<Value extends IHasID> extends Repository<Va
     return null
   }
 
-  getBy (compareFn: (other: Value) => boolean): Value | null {
-    const ret = this.storage.getBy(compareFn)
-    if (ret === null) return null
-    return Object.assign(new this.Base(), ret)
-  }
-
-  public add (item: Value): ID {
+  public add (item: Value): number {
     return this.storage.add(item, item.id)
   }
 

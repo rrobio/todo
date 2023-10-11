@@ -4,15 +4,15 @@ function generateButton (todo: Todo, type: string): HTMLSpanElement {
   const input = document.createElement('button')
   const label = document.createElement('label')
   input.setAttribute('type', 'button')
-  input.setAttribute('value', `${todo.id.toString()}`)
-  input.setAttribute('id', `${type}-button#${todo.id.toString()}`)
+  input.setAttribute('value', `${todo.id?.toString()}`)
+  input.setAttribute('id', `${type}-button#${todo.id?.toString()}`)
   input.textContent = 'X'
   input.addEventListener('click', function (event) {
     event.preventDefault()
     const deleteEvent = new Event('deleteTodo', { bubbles: true })
     event.target?.dispatchEvent(deleteEvent)
   })
-  label.setAttribute('for', `${type}-button#${todo.id.toString()}`)
+  label.setAttribute('for', `${type}-button#${todo.id?.toString()}`)
   label.textContent = `${type}`
   const span = document.createElement('span')
   span.appendChild(input)
@@ -25,8 +25,8 @@ function generateCheck (todo: Todo, type: string): HTMLSpanElement {
   const input = document.createElement('input')
   const label = document.createElement('label')
   input.setAttribute('type', 'checkbox')
-  input.setAttribute('id', `${type}-button#${todo.id.toString()}`)
-  input.setAttribute('value', todo.id.toString())
+  input.setAttribute('id', `${type}-button#${todo.id?.toString()}`)
+  input.setAttribute('value', `${todo.id?.toString()}`)
 
   if (type === 'done' && todo.done) {
     input.checked = true
@@ -40,7 +40,7 @@ function generateCheck (todo: Todo, type: string): HTMLSpanElement {
     const todoEvent = new Event(type === 'done' ? 'toggleTodo' : 'toggleSkip', { bubbles: true })
     event.target?.dispatchEvent(todoEvent)
   })
-  label.setAttribute('for', `${type}-button#${todo.id.toString()}`)
+  label.setAttribute('for', `${type}-button#${todo.id?.toString()}`)
   label.textContent = `${type}`
 
   span.appendChild(input)

@@ -1,29 +1,20 @@
 import { type IStorage, type ID, nextID } from '../repository/repository'
 
 export default class InMemoryStorage implements IStorage {
-  private readonly storage = new Map<ID, unknown>()
+  private readonly storage = new Map<number, unknown>()
 
   getAll (): unknown[] {
     return [...this.storage.values()]
   }
 
-  get (id: ID): unknown | null {
+  get (id: number): unknown | null {
     if (this.storage.has(id)) {
       return this.storage.get(id)
     }
     return null
   }
 
-  public getBy (compareFn: (other: unknown) => boolean): unknown {
-    for (const e of this.storage.values()) {
-      if (compareFn(e)) {
-        return e
-      }
-    }
-    return null
-  }
-
-  public add (item: unknown, id?: ID): ID {
+  public add (item: unknown, id?: number): number {
     if (id !== undefined) {
       this.storage.set(id, item)
       return id
@@ -42,16 +33,12 @@ export default class InMemoryStorage implements IStorage {
     return newKey
   }
 
-  public remove (id: ID): boolean {
+  public remove (id: number): boolean {
     return this.storage.delete(id)
   }
 
-  public removeBy (compareFn: (other: unknown) => boolean): boolean {
-    for (const [key, value] of this.storage.entries()) {
-      if (compareFn(value)) {
-        return this.storage.delete(key)
-      }
-    }
+  public set (id: number, item: unknown): boolean {
+    if (!this.storage.has(id)) {
     return false
   }
 

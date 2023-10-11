@@ -23,7 +23,7 @@ describe('ModelRepositroy', () => {
       const todos = todoArrayFactory(5)
       const repository = repositoryFactory(todos)
       todos.forEach(e => {
-        const todo = repository.get(e.id)
+        const todo = repository.get(e.id ?? -1) // FIXME:
         expect(todo).not.toBeNull()
         expect(todo).toStrictEqual(e)
       })
@@ -53,7 +53,7 @@ describe('ModelRepositroy', () => {
       const todos = todoArrayFactory(nTodos)
       const repository = repositoryFactory(todos)
 
-      const gotTodo = repository.get(todos[0].id)
+      const gotTodo = repository.get(todos[0].id ?? -1)
       expect(gotTodo).not.toBeNull()
       expect(gotTodo).toStrictEqual(todos[0])
     })
@@ -62,25 +62,8 @@ describe('ModelRepositroy', () => {
       const todos = todoArrayFactory(nTodos)
       const repository = repositoryFactory(todos)
 
-      const gotTodo = repository.get(todoFactory({ id: -1 }).id)
+      const gotTodo = repository.get(todoFactory({ id: -1 }).id ?? -1)
       expect(gotTodo).toBeNull()
-    })
-    test('should get with comparison function', () => {
-      const nTodos = 5
-      const todos = todoArrayFactory(nTodos)
-      const repository = repositoryFactory(todos)
-      repository.add(new Todo('asdf', true, true))
-      const got = repository.getBy((a) => a.done && a.text === 'asdf')
-      expect(got).not.toBe(null)
-      expect(got?.text).toStrictEqual('asdf')
-    })
-    test('should fail with comparison function', () => {
-      const nTodos = 5
-      const todos = todoArrayFactory(nTodos)
-      const repository = repositoryFactory(todos)
-      repository.add(new Todo('asdf', true, true))
-      const got = repository.getBy(() => false)
-      expect(got).toBe(null)
     })
   })
   describe('setting todos', () => {
@@ -97,12 +80,12 @@ describe('ModelRepositroy', () => {
       const repository = repositoryFactory(todos)
       expect(repository.getAll().length).toBe(nTodos)
       // get the first todo
-      const todo = repository.get(todos[0].id)
+      const todo = repository.get(todos[0].id ?? -1)
       expect(todo).not.toBeNull()
       if (todo === null) {
         fail('it should not reach here')
       } else {
-        expect(repository.get(todo.id)).toStrictEqual(todo)
+        expect(repository.get(todo.id ?? -1)).toStrictEqual(todo)
         // update todo
         todo.toggleDone()
         todo.toggleSkip()
@@ -110,8 +93,8 @@ describe('ModelRepositroy', () => {
         // set in repository
         repository.set(todo)
         expect(repository.getAll().length).toBe(nTodos)
-        expect(repository.get(todo.id)).not.toBeNull()
-        expect(repository.get(todo.id)).toStrictEqual(todo)
+        expect(repository.get(todo.id ?? -1)).not.toBeNull()
+        expect(repository.get(todo.id ?? -1)).toStrictEqual(todo)
       }
     })
     test('should add new when setting on empty repository', () => {
