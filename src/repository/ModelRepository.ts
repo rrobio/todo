@@ -1,4 +1,8 @@
-import { type IHasID, Repository, type IConstructor, type IStorage, type ID } from './repository'
+import Repository from './repository'
+import type IStorage from '../storage/storage'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type IConstructor<T> = new (...args: any[]) => T
 
 export default class ModelRepository<Value extends { id?: number } > extends Repository<Value> {
   constructor (private readonly Base: IConstructor<Value>, private readonly storage: IStorage) {
@@ -23,10 +27,18 @@ export default class ModelRepository<Value extends { id?: number } > extends Rep
   }
 
   public remove (item: Value): boolean {
-    return this.storage.remove(item.id)
+    if (item.id === undefined) {
+      return false
+    } else {
+      return this.storage.remove(item.id)
+    }
   }
 
   public set (item: Value): boolean {
-    return this.storage.set(item.id, item)
+    if (item.id === undefined) {
+      return false
+    } else {
+      return this.storage.set(item.id, item)
+    }
   }
 }

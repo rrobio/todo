@@ -42,16 +42,6 @@ describe('InMemoryStorage', () => {
       expect(storage.get(ids[0])).not.toBeNull()
       expect(storage.get(ids[lastId])).toStrictEqual(data)
     })
-    test('should get by comparison .getBy', () => {
-      expect(storage.getBy((a: any) => {
-        return a.bar ?? false
-      })).toStrictEqual(data)
-    })
-    test('should fail to find for invalid comparison', () => {
-      expect(storage.getBy(() => {
-        return false
-      })).toBeNull()
-    })
   })
   describe('Removing elements', () => {
     let storage: InMemoryStorage, ids: number[]
@@ -63,20 +53,6 @@ describe('InMemoryStorage', () => {
       const before = storage.getAll().length
       expect(storage.remove(ids[0])).toBe(true)
       expect(storage.getAll().length).toBe(before - 1)
-    })
-    test('should remove one by comparison', () => {
-      const before = storage.getAll().length
-      expect(storage.removeBy((e: any) => {
-        return e.bar ?? false
-      })).toBe(true)
-      expect(storage.getAll().length).toBe(before - 1)
-    })
-    test('should remove One by comparison', () => {
-      const before = storage.getAll().length
-      expect(storage.removeBy(() => {
-        return false
-      })).toBe(false)
-      expect(storage.getAll().length).toBe(before)
     })
   })
   describe('Setting elements', () => {
@@ -94,30 +70,11 @@ describe('InMemoryStorage', () => {
       expect(storage.get(id)).toStrictEqual({ foo: 'asdf' })
       expect(storage.getAll().length).toBe(before)
     })
-    test('should add new item when id doesnt exist in storage', () => {
+    test('should fail when setting an item that doesnt exist', () => {
       const element = { foo: 'asdf' }
       const before = storage.getAll().length
-      expect(storage.set(+faker.date.anytime(), element)).toBe(true)
-      expect(storage.getAll().length).toBe(before + 1)
-    })
-    test('should set/update by comparison', () => {
-      const element = { foo: 'asdf', bar: 'bin' }
-      const before = storage.getAll().length
-      expect(storage.setBy(element, (e: any) => {
-        return e.bar ?? false
-      })).toBe(true)
-      expect(storage.getBy((e: any) => {
-        return e.bar ?? false
-      })).toStrictEqual(element)
+      expect(storage.set(+faker.date.anytime(), element)).toBe(false)
       expect(storage.getAll().length).toBe(before)
-    })
-    test('should add new when setting by comparison if comparison fails', () => {
-      const element = { foo: 'asdf', bar: 'bin' }
-      const before = storage.getAll().length
-      expect(storage.setBy(element, () => {
-        return false
-      })).toBe(true)
-      expect(storage.getAll().length).toBe(before + 1)
     })
   })
 })

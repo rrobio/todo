@@ -1,4 +1,4 @@
-import { type IStorage, type ID, nextID } from '../repository/repository'
+import type IStorage from './storage'
 
 export default class InMemoryStorage implements IStorage {
   private readonly storage = new Map<number, unknown>()
@@ -24,13 +24,12 @@ export default class InMemoryStorage implements IStorage {
     }
   }
 
-  private nextFree (): ID {
+  private nextFree (): number {
     const keys = [...this.storage.keys()]
     if (keys.length === 0) {
-      return nextID()
+      return 0
     }
-    const newKey = nextID(keys[keys.length - 1])
-    return newKey
+    return keys[keys.length - 1] + 1
   }
 
   public remove (id: number): boolean {
@@ -39,23 +38,10 @@ export default class InMemoryStorage implements IStorage {
 
   public set (id: number, item: unknown): boolean {
     if (!this.storage.has(id)) {
-    return false
-  }
-
-  public set (id: number, item: unknown): boolean {
-    this.storage.set(id, item)
-    return true
-  }
-
-  public setBy (item: unknown, compareFn: (other: unknown) => boolean): boolean {
-    for (const [index, value] of this.storage.entries()) {
-      if (compareFn(value)) {
-        this.storage.set(index, item)
-        return true
-      }
+      return false
     }
-    // not in storage
-    this.add(item)
+
+    this.storage.set(id, item)
     return true
   }
 }

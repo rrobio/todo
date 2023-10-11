@@ -1,4 +1,4 @@
-import { type IStorage, type ID, nextID } from '../repository/repository'
+import type IStorage from './storage'
 
 export default class LocalStorage implements IStorage {
   private readonly storageKey: string
@@ -36,16 +36,15 @@ export default class LocalStorage implements IStorage {
     }
   }
 
-  private nextFree (): ID {
+  private nextFree (): number {
     const keys = [...this.getLocalStorage().keys()]
     if (keys.length === 0) {
-      return nextID()
+      return 0
     }
-    const newKey = nextID(keys[keys.length - 1])
-    return newKey
+    return keys[keys.length - 1] + 1
   }
 
-  public remove (id: ID): boolean {
+  public remove (id: number): boolean {
     const data = this.getLocalStorage()
     if (data.delete(id)) {
       this.saveLocalStorage(data)
@@ -54,36 +53,14 @@ export default class LocalStorage implements IStorage {
     return false
   }
 
-  public removeBy (compareFn: (other: unknown) => boolean): boolean {
-    const data = this.getLocalStorage()
-    for (const [key, value] of data) {
-      if (compareFn(value)) {
-        const ret = data.delete(key)
-        this.saveLocalStorage(data)
-        return ret
-      }
-    }
-    return false
-  }
-
   public set (id: number, item: unknown): boolean {
     const data = this.getLocalStorage()
-    data.set(id, item)
-    this.saveLocalStorage(data)
-    return true
-  }
-
-  public setBy (item: unknown, compareFn: (other: unknown) => boolean): boolean {
-    const data = this.getLocalStorage()
-    for (const [index, value] of data) {
-      if (compareFn(value)) {
-        data.set(index, item)
-        this.saveLocalStorage(data)
-        return true
-      }
+    if (!data.has(id)) {
+      return false
+    } else {
+      data.set(id, item)
+      this.saveLocalStorage(data)
+      return true
     }
-    // not in storage
-    this.add(item)
-    return true
   }
 }

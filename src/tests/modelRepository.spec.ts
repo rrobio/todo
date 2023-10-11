@@ -97,22 +97,18 @@ describe('ModelRepositroy', () => {
         expect(repository.get(todo.id ?? -1)).toStrictEqual(todo)
       }
     })
-    test('should add new when setting on empty repository', () => {
+    test('should fail when setting on empty repository', () => {
       const repository = repositoryFactory()
       expect(repository.getAll().length).toBe(0)
       const todo = todoFactory({})
-      repository.set(todo)
-      expect(repository.getAll().length).toBe(1)
-      expect(repository.get(todo.id)).toStrictEqual(todo)
+      expect(repository.set(todo)).toBe(false)
+      expect(repository.getAll().length).toBe(0)
     })
-    test('should pushback new', () => {
-      const repository = repositoryFactory()
-      repository.set(todoFactory({}))
-      expect(repository.getAll().length).toBe(1)
-      const todo = todoFactory({})
-      repository.set(todo)
-      expect(repository.getAll().length).toBe(2)
-      expect(repository.get(todo.id)).toStrictEqual(todo)
+    test('should fail when setting with undefinde id', () => {
+      const repository = repositoryFactory(todoArrayFactory(5))
+      expect(repository.getAll().length).toBe(5)
+      expect(repository.set(new Todo('test'))).toBe(false)
+      expect(repository.getAll().length).toBe(5)
     })
   })
   describe('adding a todo', () => {
@@ -150,6 +146,12 @@ describe('ModelRepositroy', () => {
       expect(repository.getAll()?.length).toStrictEqual(5)
       expect(repository.remove(new Todo('asd', false, false, -1))).toBe(false)
       expect(repository.getAll()?.length).toBe(5)
+    })
+    test('should fail when removing with undefinde id', () => {
+      const repository = repositoryFactory(todoArrayFactory(5))
+      expect(repository.getAll().length).toBe(5)
+      expect(repository.remove(new Todo('test'))).toBe(false)
+      expect(repository.getAll().length).toBe(5)
     })
   })
 })
