@@ -3,7 +3,7 @@ import { Todo } from '../model/todo'
 
 export interface TodoData {
   text: string
-  id: number
+  id?: number
   done: boolean
   skip: boolean
 }
@@ -11,7 +11,7 @@ export interface TodoData {
 export function getRandomTodoData (): TodoData {
   return {
     text: faker.lorem.lines(2),
-    id: +faker.date.anytime(),
+    id: undefined,
     done: faker.datatype.boolean(),
     skip: faker.datatype.boolean()
   }

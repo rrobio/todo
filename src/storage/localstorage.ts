@@ -15,6 +15,14 @@ export default class LocalStorage implements IStorage {
     localStorage.setItem(this.storageKey, JSON.stringify(Array.from(data.entries())))
   }
 
+  private nextFreeKey (): number {
+    const keys = [...this.getLocalStorage().keys()]
+    if (keys.length === 0) {
+      return 0
+    }
+    return keys[keys.length - 1] + 1
+  }
+
   public getAll (): unknown[] {
     const data = this.getLocalStorage()
     return [...data.values()]
@@ -24,24 +32,12 @@ export default class LocalStorage implements IStorage {
     return this.getLocalStorage().get(id)
   }
 
-  public add (item: unknown, id?: number): number {
-    if (id !== undefined) {
-      const data = this.getLocalStorage()
-      data.set(id, item)
-      this.saveLocalStorage(data)
-      return id
-    } else {
-      const nextFree = this.nextFree()
-      return this.add(item, nextFree)
-    }
-  }
-
-  private nextFree (): number {
-    const keys = [...this.getLocalStorage().keys()]
-    if (keys.length === 0) {
-      return 0
-    }
-    return keys[keys.length - 1] + 1
+  public add (item: unknown): number {
+    const id = this.nextFreeKey()
+    const data = this.getLocalStorage()
+    data.set(id, item)
+    this.saveLocalStorage(data)
+    return id
   }
 
   public remove (id: number): boolean {
