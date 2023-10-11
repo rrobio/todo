@@ -50,8 +50,9 @@ document.addEventListener('renderTodos', () => {
 
 document.addEventListener('deleteTodo', (e) => {
   const target = e.target as HTMLButtonElement
-  const todo = repository.get(+target.value)
+  const todo: Todo | null = repository.get(+target.value)
   if (todo !== null) {
+    console.log('got', todo)
     repository.remove(todo)
     renderTodos(repository.getAll())
   }

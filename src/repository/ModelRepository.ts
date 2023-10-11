@@ -11,19 +11,17 @@ export default class ModelRepository<Value extends { id?: number } > extends Rep
 
   public getAll (): Value[] {
     const data = this.storage.getAll()
-    return data.map(d => Object.assign(new this.Base(), d))
+    return data.map(d => Object.assign(new this.Base(), d[1], { id: d[0] }))
   }
 
   public get (id?: number): Value | null {
-    if (id === undefined) {
-      return null
-    } else {
+    if (id !== undefined) {
       const got = this.storage.get(id)
       if (got !== null) {
-        return Object.assign(new this.Base(), got)
+        return Object.assign(new this.Base(), got, { id })
       }
-      return null
     }
+    return null
   }
 
   public add (item: Value): number {

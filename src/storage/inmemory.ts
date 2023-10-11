@@ -11,8 +11,10 @@ export default class InMemoryStorage implements IStorage {
     return keys[keys.length - 1] + 1
   }
 
-  public getAll (): unknown[] {
-    return [...this.storage.values()]
+  public getAll (): Array<[number, unknown]> {
+    const ret = Array<[number, unknown]>()
+    this.storage.forEach((value, key) => ret.push([key, value]))
+    return ret
   }
 
   public get (id: number): unknown | null {

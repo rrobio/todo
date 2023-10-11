@@ -23,9 +23,11 @@ export default class LocalStorage implements IStorage {
     return keys[keys.length - 1] + 1
   }
 
-  public getAll (): unknown[] {
+  public getAll (): Array<[number, unknown]> {
     const data = this.getLocalStorage()
-    return [...data.values()]
+    const ret = Array<[number, unknown]>()
+    data.forEach((value, key) => ret.push([key, value]))
+    return ret
   }
 
   public get (id: number): unknown {

@@ -1,5 +1,5 @@
 export default interface IStorage {
-  getAll: () => unknown[]
+  getAll: () => Array<[number, unknown]>
   get: (id: number) => unknown | null
   add: (item: unknown) => number
   remove: (id: number) => boolean
