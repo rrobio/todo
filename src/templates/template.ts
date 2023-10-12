@@ -31,7 +31,7 @@ function findAllTerms (template: string): Term[] {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function applyAllTerms (context: any, terms: Term[], template: string): string {
   terms.forEach(term => {
-    const value = context[term.value]
+    const value = context[term.value.trim()]
     if (value === undefined) {
       throw new SyntaxError('Term `' + term.value + '` not in context starting at: ' + term.start)
     }

@@ -1,8 +1,9 @@
 import './style.css'
 import { Todo } from './model/todo.ts'
-import generateNode from './model/todoElement.ts'
 import LocalStorage from './storage/localstorage.ts'
 import ModelRepository from './repository/modelRepository.ts'
+import todoTemplate from './model/todoTemplate.html?raw'
+import render from './templates/template.ts'
 
 const repository = new ModelRepository(Todo, new LocalStorage('Todo'))
 
@@ -26,7 +27,7 @@ function renderTodos (todos: Todo[]): void {
           return true
       }
     })
-    .map(e => generateNode(e))
+    .map(e => render(e, todoTemplate))
   app.innerHTML = nodes.join('')
 }
 
