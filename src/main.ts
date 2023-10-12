@@ -27,7 +27,7 @@ function renderTodos (todos: Todo[]): void {
           return true
       }
     })
-    .map(e => render(e, todoTemplate))
+    .map(e => render(todoTemplate, e))
   app.innerHTML = nodes.join('')
 }
 

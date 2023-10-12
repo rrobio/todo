@@ -42,7 +42,8 @@ function applyAllTerms (context: any, terms: Term[], template: string): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function render (context: any, template: string): string {
+export default function render (template: string, context: any, ...contexts: any[]): string {
+  context = Object.assign(context, ...contexts)
   const terms = findAllTerms(template)
   return applyAllTerms(context, terms, template)
 }
