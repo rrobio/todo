@@ -27,7 +27,12 @@ function renderTodos (todos: Todo[]): void {
           return true
       }
     })
-    .map(e => render(todoTemplate, e))
+    .map(e => {
+      const checkContext = { doneChecked: '', skipChecked: '' }
+      checkContext.doneChecked = e.done ? 'checked' : ''
+      checkContext.skipChecked = e.skip ? 'checked' : ''
+      return render(todoTemplate, e, checkContext)
+    })
   app.innerHTML = nodes.join('')
 }
 

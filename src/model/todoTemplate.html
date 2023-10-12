@@ -1,10 +1,10 @@
 <div class="todo"> 
     <input type="checkbox" id="done-button#{{ id }}" onchange="todoEvent(event, 'ToggleDone')" 
-        value="{{ id }}"/>
+        value="{{ id }}" {{ doneChecked }}/>
     <label for="done-button#{{ id }}"> Done </label>
 
     <input type="checkbox" id="skip-button#{{ id }}" onchange="todoEvent(event, 'ToggleSkip')" 
-        value="{{ id }}"/>
+        value="{{ id }}" {{ skipChecked }} />
     <label for="skip-button#{{ id }}"> Skip </label>
 
     <button value="{{ id }}" id="delete-button#{{ id }}" onclick="todoEvent(event, 'Delete')">X</button>
