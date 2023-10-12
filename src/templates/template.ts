@@ -1,42 +1,8 @@
-// {{     term   }}
-// ^start ^value ^end
-export interface Term {
-  start: number
-  end: number
-  value: string
-}
-
-function findAllTerms (template: string): Term[] {
-  let start = 0
-  let end = 0
-
-  const terms: Term[] = []
-  while (true) {
-    start = template.indexOf('{{', start)
-    if (start === -1) {
-      break
-    }
-    end = template.indexOf('}}', start)
-    if (end === -1) {
-      throw new SyntaxError('Term not closed starting at: ' + start)
-    }
-
-    terms.push({ start, end, value: template.slice(start + 2, end) })
-    start++
-  }
-
-  return terms
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function applyAllTerms (context: any, terms: Term[], template: string): string {
-  terms.forEach(term => {
-    const value = context[term.value.trim()]
-    if (value === undefined) {
-      throw new SyntaxError('Term `' + term.value + '` not in context starting at: ' + term.start)
-    }
-
-    template = template.replace('{{' + term.value + '}}', value)
+function applyAllSubstitutions (template: string, context: any): string {
+  Object.entries(context).forEach(([key, value]) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    template = template.replaceAll('{{' + key + '}}', value as any)
   })
   return template
 }
@@ -44,6 +10,5 @@ function applyAllTerms (context: any, terms: Term[], template: string): string {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function render (template: string, context: any, ...contexts: any[]): string {
   context = Object.assign(context, ...contexts)
-  const terms = findAllTerms(template)
-  return applyAllTerms(context, terms, template)
+  return applyAllSubstitutions(template, context)
 }
