@@ -23,7 +23,7 @@ describe('template spec', () => {
     cy.contains('Create Todo').should('be.visible')
     cy.get('#new-todo-text').should('be.visible')
 	  cy.get('.todo').should('have.length', 1)
-    cy.contains('delete').should('be.visible').click()
+    cy.contains('Delete').should('be.visible').click()
 	  cy.get('.todo').should('have.length', 0)
   })
   it('mark todo as done', () => {

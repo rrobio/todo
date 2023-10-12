@@ -5,6 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo</title>    
+    <script type="text/javascript"> 
+    function todoEvent(event, type) {
+      event.preventDefault();
+      const todoEvent = new Event('todoEvent' + type, { bubbles: true });
+      event.target?.dispatchEvent(todoEvent);
+    }
+    </script>
   </head>
   <body>
     <div id="create-todo">

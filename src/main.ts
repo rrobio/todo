@@ -14,7 +14,8 @@ function renderTodos (todos: Todo[]): void {
   const filter = getFilter()
   const app = document.querySelector('#app') as HTMLDivElement
   app.replaceChildren()
-  todos
+  app.innerHTML = ''
+  const nodes = todos
     .filter((e) => {
       switch (filter) {
         case 'done':
@@ -25,10 +26,8 @@ function renderTodos (todos: Todo[]): void {
           return true
       }
     })
-    .forEach(e => {
-      const todoHTMLElement = generateNode(e)
-      app.appendChild(todoHTMLElement)
-    })
+    .map(e => generateNode(e))
+  app.innerHTML = nodes.join('')
 }
 
 renderTodos(repository.getAll());
@@ -48,17 +47,16 @@ document.addEventListener('renderTodos', () => {
   renderTodos(repository.getAll())
 })
 
-document.addEventListener('deleteTodo', (e) => {
+document.addEventListener('todoEventDelete', (e) => {
   const target = e.target as HTMLButtonElement
   const todo: Todo | null = repository.get(+target.value)
   if (todo !== null) {
-    console.log('got', todo)
     repository.remove(todo)
     renderTodos(repository.getAll())
   }
 })
 
-document.addEventListener('toggleTodo', (e) => {
+document.addEventListener('todoEventToggleDone', (e) => {
   const target = e.target as HTMLInputElement
   const todo = repository.get(+target.value)
   if (todo !== null) {
@@ -68,7 +66,7 @@ document.addEventListener('toggleTodo', (e) => {
   }
 })
 
-document.addEventListener('toggleSkip', (e) => {
+document.addEventListener('todoEventToggleSkip', (e) => {
   const target = e.target as HTMLInputElement
   const todo = repository.get(+target.value)
   if (todo !== null) {
