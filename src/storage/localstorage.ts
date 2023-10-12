@@ -1,10 +1,10 @@
-import type IStorage from './storage'
+import type IStorage from './istorage'
 
 export default class LocalStorage implements IStorage {
   private readonly storageKey: string
 
   constructor (name: string) {
-    this.storageKey = `localstoragerepository#${name}`
+    this.storageKey = `localistorage#${name}`
   }
 
   private getLocalStorage (): Map<number, unknown> {

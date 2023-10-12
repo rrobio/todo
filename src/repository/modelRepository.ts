@@ -1,5 +1,5 @@
-import Repository from './repository'
-import type IStorage from '../storage/storage'
+import Repository from './irepository'
+import type IStorage from '../storage/istorage'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type IConstructor<T> = new (...args: any[]) => T

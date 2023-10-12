@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { Todo } from '../model/todo'
-import ModelRepository from '../repository/ModelRepository'
+import ModelRepository from '../repository/modelRepository'
 import InMemoryStorage from '../storage/inmemory'
 import { todoArrayFactory, todoFactory } from './helpers'
 

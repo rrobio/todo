@@ -1,4 +1,4 @@
-import type IStorage from './storage'
+import type IStorage from './istorage'
 
 export default class InMemoryStorage implements IStorage {
   private readonly storage = new Map<number, unknown>()
