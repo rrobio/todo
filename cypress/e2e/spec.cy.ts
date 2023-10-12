@@ -27,7 +27,7 @@ describe('template spec', () => {
 	  cy.get('.todo').should('have.length', 0)
   })
   it('mark todo as done', () => {
-    cy.contains('done').should('be.visible').click()
+    cy.get('[for*=done-button]').should('be.visible').click()
     cy.get('[id*=done-button]').should('be.enabled')
   })
   it('filter for done todos', () => {
